@@ -1,0 +1,3 @@
+.MediaListTable tbody tr {
+  @apply h-24;
+}
