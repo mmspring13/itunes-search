@@ -15,7 +15,7 @@ export const AppSearch = () => {
   const router = useRouter();
   const params = useSearchParams();
 
-  const [newQuery, setNewQuery] = useState(params.toString());
+  const [newQuery, setNewQuery] = useState<string>('');
 
   const { term, country, media, entity, attribute } = useSearchQuery(newQuery);
   const debouncedNewQuery = useDebounce(newQuery, 960);
@@ -68,8 +68,16 @@ export const AppSearch = () => {
   }, [media]);
 
   useEffect(() => {
-    router.push(`?${debouncedNewQuery}`);
+    if (debouncedNewQuery) {
+      router.push(`?${debouncedNewQuery}`);
+    } else {
+      router.push('/');
+    }
   }, [debouncedNewQuery, router]);
+
+  useEffect(() => {
+    setNewQuery(params.toString());
+  }, [params]);
 
   return (
     <Form
@@ -94,6 +102,7 @@ export const AppSearch = () => {
         }
         name='country'
         selectionMode='multiple'
+        selectedKeys={country}
         defaultSelectedKeys={country}
       >
         {Object.keys(countryIso2).map((code) => (

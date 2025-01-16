@@ -63,7 +63,7 @@ export const MediaListTable = ({ fetchData }: MediaListTableProps) => {
   }, [visibleColumns]);
 
   const formattedData: Partial<BaseMediaProps>[] = useMemo(() => {
-    if (data.length) {
+    if (data?.length) {
       return map(pick(visibleColumns), data);
     }
     return [];
