@@ -1,6 +1,11 @@
-import { MediaType } from "@/api/types";
+import { MediaType } from '@/api/types';
 
-export type FilterItemName = 'term' | 'country' | 'media' | 'entity' | 'attribute';
+export type FilterItemName =
+  | 'term'
+  | 'country'
+  | 'media'
+  | 'entity'
+  | 'attribute';
 
 export type FilterItem<T> = [T | undefined, (value: T) => void];
 

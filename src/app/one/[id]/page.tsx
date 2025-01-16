@@ -1,9 +1,7 @@
 // const findById = async () => {};
 
 const MediaItemPage = () => {
-	return (
-		<div></div>
-	);
+  return <div></div>;
 };
 
 export default MediaItemPage;

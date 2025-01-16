@@ -1,11 +1,9 @@
-import { itunesProxy } from "@/api/itunes-proxy";
-import { MediaListAlert, MediaListTable } from "./client";
+import { itunesProxy } from '@/api/itunes-proxy';
+import { MediaListAlert, MediaListTable } from './client';
 
-export const MediaList = async ({
-  queryString
-}: { queryString?: string }) => {
-  let data = null
-  let error = null
+export const MediaList = async ({ queryString }: { queryString?: string }) => {
+  let data = null;
+  let error = null;
   if (queryString) {
     data = await itunesProxy(queryString);
     if (data instanceof Error) {
@@ -14,10 +12,10 @@ export const MediaList = async ({
   }
 
   return (
-    <div className="w-full mt-4">
+    <div className='mt-4 w-full'>
       {error && <MediaListAlert message={error.message} />}
       {data && (
-        <MediaListTable data={data?.results || []} />
+        <MediaListTable data={data?.results || []} count={data.resultCount} />
       )}
     </div>
   );

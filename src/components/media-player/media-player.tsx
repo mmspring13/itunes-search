@@ -1,29 +1,27 @@
 'use client';
 
-import { Alert, Spinner } from "@nextui-org/react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { Alert, Spinner } from '@nextui-org/react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 export type MediaPlayerProps = {
   mediaUrl: string;
 };
 
 const mediaTypes = ['audio', 'video', 'ufo'];
-type MediaType = typeof mediaTypes[number];
+type MediaType = (typeof mediaTypes)[number];
 
-export const MediaPlayer = ({
-  mediaUrl,
-}: MediaPlayerProps) => {
+export const MediaPlayer = ({ mediaUrl }: MediaPlayerProps) => {
   const [mimeType, setMimeType] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const mediaType = useMemo(() => {
-    let type: MediaType = 'ufo'
+    let type: MediaType = 'ufo';
     if (mimeType) {
       const contentType = mimeType.split('/')[0];
       if (mediaTypes.includes(contentType)) type = contentType;
     }
-    return type
-  }, [mimeType])
+    return type;
+  }, [mimeType]);
 
   const detectType = useCallback(async () => {
     try {
@@ -37,7 +35,9 @@ export const MediaPlayer = ({
       if (error instanceof Error) {
         reason = error.message;
       }
-      setError(`Failed to fetch media file. Reason: ${reason}. Click for reload`);
+      setError(
+        `Failed to fetch media file. Reason: ${reason}. Click for reload`
+      );
     }
   }, [mediaUrl]);
 
@@ -46,9 +46,7 @@ export const MediaPlayer = ({
   }, [detectType]);
 
   if (error) {
-    return (
-       <Alert color="danger" title={error} onClick={detectType} />
-    );
+    return <Alert color='danger' title={error} onClick={detectType} />;
   }
 
   if (!mimeType) {

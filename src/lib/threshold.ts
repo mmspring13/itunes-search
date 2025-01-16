@@ -7,19 +7,22 @@ export default function createThreshold<Fn extends (...args: any[]) => void>(
   let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
   return function (...args: Parameters<Fn>) {
-      const now = Date.now();
+    const now = Date.now();
 
-      if (now - lastExecuted >= ms) {
-          lastExecuted = now;
-          fn(...args);
-      } else {
-          if (timeoutId !== null) {
-              clearTimeout(timeoutId);
-          }
-          timeoutId = setTimeout(() => {
-              lastExecuted = Date.now();
-              fn(...args);
-          }, ms - (now - lastExecuted));
+    if (now - lastExecuted >= ms) {
+      lastExecuted = now;
+      fn(...args);
+    } else {
+      if (timeoutId !== null) {
+        clearTimeout(timeoutId);
       }
+      timeoutId = setTimeout(
+        () => {
+          lastExecuted = Date.now();
+          fn(...args);
+        },
+        ms - (now - lastExecuted)
+      );
+    }
   };
 }
