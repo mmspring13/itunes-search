@@ -29,7 +29,7 @@ export type BaseMediaProps = {
 };
 
 export type ApiSearchResponse = {
-  resultsCount: number;
+  resultCount: number;
   results: Array<BaseMediaProps>;
 };
 

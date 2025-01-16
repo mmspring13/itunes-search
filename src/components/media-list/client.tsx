@@ -39,7 +39,7 @@ export type MediaListTableProps = {
 };
 
 export const MediaListTable = ({ fetchData }: MediaListTableProps) => {
-  const { results: data, resultsCount: count } =
+  const { results: data, resultCount: count } =
     use<ApiSearchResponse>(fetchData);
   const [visibleColumns, setVisibleColumns] = useState([
     'wrapperType',
@@ -72,12 +72,12 @@ export const MediaListTable = ({ fetchData }: MediaListTableProps) => {
   return (
     <Table
       classNames={{
-        base: 'MediaListTable h-full max-w-full overflow-auto mt-4',
+        base: 'MediaListTable h-full max-w-full overflow-auto mt-2',
         table: 'h-full',
       }}
       topContentPlacement='outside'
       topContent={
-        <div className='flex flex-row items-center justify-end space-x-2'>
+        <div className='flex flex-row items-center justify-end space-x-2 pt-2'>
           {Boolean(count) && <span>Result count {count}</span>}
           <Dropdown>
             <DropdownTrigger className='flex'>

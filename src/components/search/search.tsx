@@ -15,7 +15,7 @@ export const AppSearch = () => {
   const router = useRouter();
   const params = useSearchParams();
 
-  const [newQuery, setNewQuery] = useState<string>('');
+  const [newQuery, setNewQuery] = useState<string>(params.toString());
 
   const { term, country, media, entity, attribute } = useSearchQuery(newQuery);
   const debouncedNewQuery = useDebounce(newQuery, 960);
