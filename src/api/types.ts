@@ -28,6 +28,11 @@ export type BaseMediaProps = {
   [k: string]: unknown;
 };
 
+export type ApiSearchResponse = {
+  resultsCount: number;
+  results: Array<BaseMediaProps>;
+};
+
 export const constructAttributes: MediaTypeAttributes = {
   ebook: ['ebook'],
   movie: [

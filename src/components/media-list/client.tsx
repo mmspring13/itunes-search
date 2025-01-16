@@ -1,6 +1,6 @@
 'use client';
 
-import { BaseMediaProps } from '@/api/types';
+import { ApiSearchResponse, BaseMediaProps } from '@/api/types';
 import { isValidUrl } from '@/lib/is-valid-url';
 import {
   Table,
@@ -20,7 +20,7 @@ import {
 import { ChevronDownIcon, Play } from 'lucide-react';
 import Image from 'next/image';
 import { keys, map, nth, pick, prop } from 'ramda';
-import { useMemo, useState } from 'react';
+import { use, useMemo, useState } from 'react';
 import { MediaPlayerModal } from '../medial-player-modal';
 import './style.css';
 
@@ -35,11 +35,12 @@ export const MediaListAlert = ({ message }: { message: string }) => {
 };
 
 export type MediaListTableProps = {
-  data: BaseMediaProps[];
-  count?: number;
+  fetchData: Promise<ApiSearchResponse>;
 };
 
-export const MediaListTable = ({ data, count }: MediaListTableProps) => {
+export const MediaListTable = ({ fetchData }: MediaListTableProps) => {
+  const { results: data, resultsCount: count } =
+    use<ApiSearchResponse>(fetchData);
   const [visibleColumns, setVisibleColumns] = useState([
     'wrapperType',
     'trackName',
@@ -51,7 +52,7 @@ export const MediaListTable = ({ data, count }: MediaListTableProps) => {
   ]);
 
   const allColumns = useMemo(() => {
-    if (data.length) {
+    if (data?.length) {
       return map((key) => ({ key: key }), keys(nth(0, data) || {}));
     }
     return [];

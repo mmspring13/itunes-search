@@ -18,7 +18,7 @@ export const AppSearch = () => {
   const [newQuery, setNewQuery] = useState(params.toString());
 
   const { term, country, media, entity, attribute } = useSearchQuery(newQuery);
-  const debouncedNewQuery = useDebounce(newQuery, 400);
+  const debouncedNewQuery = useDebounce(newQuery, 960);
 
   const changeSearchParam = (
     name: FilterItemName,
