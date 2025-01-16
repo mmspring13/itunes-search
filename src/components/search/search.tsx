@@ -118,6 +118,7 @@ export const AppSearch = () => {
         onChange={(e) => changeSearchParam('media', split(',', e.target.value))}
         selectionMode='multiple'
         defaultSelectedKeys={media}
+        selectedKeys={media}
       >
         {availableMediaTypes.map((type) => (
           <SelectItem key={type} value={type}>
@@ -135,6 +136,7 @@ export const AppSearch = () => {
           }
           selectionMode='multiple'
           defaultSelectedKeys={entity}
+          selectedKeys={entity}
         >
           {availableEntities.map((type) => (
             <SelectItem key={type} value={type}>
@@ -153,6 +155,7 @@ export const AppSearch = () => {
           }
           selectionMode='multiple'
           defaultSelectedKeys={attribute}
+          selectedKeys={attribute}
         >
           {availableAttributes.map((type) => (
             <SelectItem key={type} value={type}>
