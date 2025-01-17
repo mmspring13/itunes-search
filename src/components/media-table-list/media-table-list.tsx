@@ -15,6 +15,7 @@ import {
   Button,
   DropdownMenu,
   DropdownItem,
+  Link,
 } from '@nextui-org/react';
 import { ChevronDownIcon, Play } from 'lucide-react';
 import Image from 'next/image';
@@ -121,7 +122,8 @@ export const MediaTableList = ({
                 }
                 let type: 'text' | 'image' | 'link' = 'text';
                 const textClassName =
-                  'overflow-ellipsis whitespace-nowrap max-w-40 overflow-hidden inline-block';
+                  'inline-block max-w-36 overflow-hidden text-ellipsis';
+                const cellClassName = 'min-w-40';
                 // @todo check image by mime type
                 if (column.includes('artworkUrl')) {
                   type = 'image';
@@ -131,15 +133,13 @@ export const MediaTableList = ({
 
                 if (column === 'previewUrl' && text?.startsWith('http')) {
                   return (
-                    <TableCell>
+                    <TableCell className={cellClassName}>
                       <MediaPlayerModal mediaUrl={text}>
                         {(onOpen) => (
-                          <Tooltip content={text}>
-                            <Button type='button' onPress={onOpen} size='sm'>
-                              <Play />
-                              <span className={textClassName}>{text}</span>
-                            </Button>
-                          </Tooltip>
+                          <Button type='button' onPress={onOpen} size='sm'>
+                            <Play />
+                            <span className={textClassName}>{text}</span>
+                          </Button>
                         )}
                       </MediaPlayerModal>
                     </TableCell>
@@ -148,7 +148,7 @@ export const MediaTableList = ({
 
                 if (type === 'image') {
                   return (
-                    <TableCell>
+                    <TableCell className={cellClassName}>
                       <div className='h-full max-w-40'>
                         <Image
                           alt='media-image'
@@ -163,25 +163,28 @@ export const MediaTableList = ({
 
                 if (type === 'link') {
                   return (
-                    <TableCell>
-                      <Tooltip content={text}>
-                        <a
-                          href={text}
-                          className={textClassName}
-                          rel='noopener noreferrer'
-                          target='_blank'
-                        >
-                          {text}
-                        </a>
-                      </Tooltip>
+                    <TableCell className={cellClassName}>
+                      <Link
+                        href={text}
+                        className={textClassName}
+                        rel='noopener noreferrer'
+                        target='_blank'
+                      >
+                        {text}
+                      </Link>
                     </TableCell>
                   );
                 }
 
                 return (
-                  <TableCell>
-                    <Tooltip content={text}>
-                      <span className={textClassName}>{text || '-'}</span>
+                  <TableCell className={cellClassName}>
+                    <Tooltip
+                      content={text}
+                      classNames={{
+                        base: 'max-w-80',
+                      }}
+                    >
+                      <span className='line-clamp-4 w-full'>{text || '-'}</span>
                     </Tooltip>
                   </TableCell>
                 );
