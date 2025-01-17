@@ -1,6 +1,7 @@
 'use client';
 
 import { ApiSearchResponse, BaseMediaProps } from '@/api/types';
+import { intlFormat } from 'date-fns';
 import { isValidUrl } from '@/lib/is-valid-url';
 import {
   Table,
@@ -17,29 +18,34 @@ import {
   DropdownItem,
   Link,
 } from '@nextui-org/react';
-import { ChevronDownIcon, Play } from 'lucide-react';
+import { ChevronDownIcon, FileJson, Play } from 'lucide-react';
 import Image from 'next/image';
 import { map, pick, prop } from 'ramda';
-import { use, useMemo, useState } from 'react';
+import { lazy, use, useMemo, useState } from 'react';
 import { MediaPlayerModal } from '../medial-player-modal';
 import './style.css';
+import { isValidDate } from '@/lib/is-valid-date';
+
+const ResponseModal = lazy(() => import('../response-modal/response-modal'));
 
 export const MediaTableList = ({
   fetchData,
+  url,
 }: {
   fetchData: Promise<ApiSearchResponse>;
+  url?: string;
 }) => {
-  const { results: data, resultCount: count } =
-    use<ApiSearchResponse>(fetchData);
+  const fetchDataResponse = use<ApiSearchResponse>(fetchData);
+  const { results: data, resultCount: count } = fetchDataResponse;
 
   const [visibleColumns, setVisibleColumns] = useState([
-    'wrapperType',
-    'trackName',
-    'collectionName',
-    'artistName',
-    'previewUrl',
     'artworkUrl100',
+    'trackName',
+    'previewUrl',
     'releaseDate',
+    'artistName',
+    'collectionName',
+    'wrapperType',
   ]);
 
   const allColumns = useMemo(() => {
@@ -103,11 +109,25 @@ export const MediaTableList = ({
               ))}
             </DropdownMenu>
           </Dropdown>
+
+          {url && (
+            <ResponseModal data={fetchDataResponse}>
+              {(_, setOpen) => (
+                <Button size='sm' onPress={() => setOpen(true)} variant='flat'>
+                  <FileJson />
+                </Button>
+              )}
+            </ResponseModal>
+          )}
         </div>
       }
     >
       <TableHeader columns={tableColumns}>
-        {(column) => <TableColumn key={column.key}>{column.key}</TableColumn>}
+        {(column) => (
+          <TableColumn key={column.key}>
+            <span className='text-medium font-bold'>{column.key}</span>
+          </TableColumn>
+        )}
       </TableHeader>
       <TableBody items={formattedData}>
         {(item) => {
@@ -121,7 +141,7 @@ export const MediaTableList = ({
                 if (typeof column !== 'string' || !text) {
                   return <TableCell>-</TableCell>;
                 }
-                let type: 'text' | 'image' | 'link' = 'text';
+                let type: 'date' | 'text' | 'image' | 'link' = 'text';
                 const textClassName =
                   'inline-block max-w-36 overflow-hidden text-ellipsis';
                 const cellClassName = 'min-w-40';
@@ -130,6 +150,8 @@ export const MediaTableList = ({
                   type = 'image';
                 } else if (isValidUrl(text)) {
                   type = 'link';
+                } else if (isValidDate(text)) {
+                  type = 'date';
                 }
 
                 if (column === 'previewUrl' && text?.startsWith('http')) {
@@ -175,6 +197,24 @@ export const MediaTableList = ({
                       >
                         {text}
                       </Link>
+                    </TableCell>
+                  );
+                }
+
+                if (type === 'date') {
+                  return (
+                    <TableCell className={cellClassName}>
+                      <span className='whitespace-nowrap text-nowrap'>
+                        {intlFormat(
+                          new Date(text),
+                          {
+                            dateStyle: 'full',
+                            timeStyle: 'long',
+                            timeZone: 'UTC',
+                          },
+                          { locale: 'en-GB' }
+                        )}
+                      </span>
                     </TableCell>
                   );
                 }

@@ -27,7 +27,10 @@ export const MediaList = async ({ queryString }: { queryString?: string }) => {
             </div>
           }
         >
-          <MediaTableList fetchData={fetchData as Promise<ApiSearchResponse>} />
+          <MediaTableList
+            url={queryString}
+            fetchData={fetchData as Promise<ApiSearchResponse>}
+          />
         </Suspense>
       )}
     </div>

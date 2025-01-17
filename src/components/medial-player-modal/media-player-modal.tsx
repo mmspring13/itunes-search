@@ -42,9 +42,12 @@ export const MediaPlayerModal = ({
                   href={mediaPlayerProps.mediaUrl}
                   target='_blank'
                   rel='noopener noreferrer'
-                  className='inline-block'
+                  className='inline-flex flex-1 space-x-2 overflow-hidden'
                 >
                   <Link />
+                  <span className='inline-block max-w-full flex-1 overflow-hidden text-ellipsis whitespace-nowrap text-nowrap'>
+                    {mediaPlayerProps.mediaUrl}
+                  </span>
                 </a>
                 <Button color='danger' variant='light' onPress={onClose}>
                   Close

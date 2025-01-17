@@ -1,9 +1,12 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Outfit } from 'next/font/google';
 import './globals.css';
 import { AppUIProvider } from '@/providers/ui-provider';
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Outfit({
+  subsets: ['latin'],
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: 'Pet Itunes Search',

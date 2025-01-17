@@ -12,7 +12,7 @@ const HomePage = async ({
 
   return (
     <div className='flex h-full w-full flex-col items-center justify-center'>
-      <h1 className='mb-6 text-center text-xl'>
+      <h1 className='mb-6 text-center text-2xl'>
         <Link href='/'>Welcome to Itunes Search</Link>
       </h1>
       <HomePageSearch queryString={qs.stringify(search)} />
