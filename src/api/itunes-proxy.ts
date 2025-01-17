@@ -11,7 +11,7 @@ export const itunesProxy = async (params?: string) => {
     return null;
   }
   const newParams = qs.parse(params);
-  if (!validateQuery(newParams as Record<string, QueryValue>)) {
+  if (!newParams || !validateQuery(newParams as Record<string, QueryValue>)) {
     return null;
   }
 
@@ -25,7 +25,7 @@ export const itunesProxy = async (params?: string) => {
       cache: 'force-cache',
       next: {
         revalidate: 60 * 60 * 24,
-        tags: [getTag(qs.stringify(newParams))],
+        tags: [getTag(JSON.stringify(newParams))],
       },
     });
     const data = await search.json();
