@@ -1,21 +1,31 @@
 'use server';
 
+import qs from 'qs';
+import { validateQuery } from './utils';
+import { QueryValue } from './types';
+
 const getTag = (params = '') => ['ITUNES_PROXY', params].join('-');
 
 export const itunesProxy = async (params?: string) => {
-  const newParams = new URLSearchParams(params);
-  const fetchUrl = new URL('search', process.env.ITUNES_API_URL);
-  newParams.set('limit', '25');
-  if (params) {
-    fetchUrl.search = newParams.toString();
+  if (!params) {
+    return null;
   }
-  const tag = getTag(newParams.toString());
+  const newParams = qs.parse(params);
+  if (!validateQuery(newParams as Record<string, QueryValue>)) {
+    return null;
+  }
+
+  const fetchUrl = new URL('search', process.env.ITUNES_API_URL);
+  newParams.limit = '25';
+  if (params) {
+    fetchUrl.search = qs.stringify(newParams);
+  }
   try {
     const search = await fetch(fetchUrl, {
       cache: 'force-cache',
       next: {
         revalidate: 60 * 60 * 24,
-        tags: [tag],
+        tags: [getTag(qs.stringify(newParams))],
       },
     });
     const data = await search.json();

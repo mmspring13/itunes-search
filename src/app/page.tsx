@@ -2,8 +2,9 @@ import { MediaList } from '@/components/media-list';
 import qs from 'qs';
 import Link from 'next/link';
 import { HomePageSearch } from '@/components/home-page-search';
-import { ItunesQuery, itunesQueryProps, QueryValue } from '@/api/types';
+import { QueryValue } from '@/api/types';
 import { redirect } from 'next/navigation';
+import { validateQuery } from '@/api/utils';
 
 const HomePage = async ({
   searchParams,
@@ -13,19 +14,8 @@ const HomePage = async ({
   const search = await searchParams;
 
   // validate search params
-  if (search) {
-    if (JSON.stringify(search).length > 380) {
-      redirect('/');
-    }
-    const newQuery: Record<string, QueryValue> = {};
-    for (const [key, value] of Object.entries(search)) {
-      if (itunesQueryProps.includes(key as keyof ItunesQuery)) {
-        newQuery[key] = value;
-      }
-    }
-    if (Object.keys(newQuery).length !== Object.keys(search).length) {
-      redirect('/');
-    }
+  if (search && !validateQuery(search)) {
+    redirect('/');
   }
 
   return (
