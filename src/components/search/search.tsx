@@ -2,12 +2,11 @@
 
 import { countryIso2 } from '@/lib/countries';
 import { Form, Input, Select, SelectItem } from '@nextui-org/react';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { split, omit, uniq, flatten, values, pick } from 'ramda';
 import { constructAttributes, constructEntities, MediaType } from '@/api/types';
 import { FilterItemName } from './types';
-import useDebounce from '@/hooks/use-debounce';
-import { useSearchQuery } from '@/hooks';
+import { useItunesQuery } from '@/hooks';
 import qs from 'qs';
 
 export type AppSearchProps = {
@@ -16,11 +15,7 @@ export type AppSearchProps = {
 };
 
 export const AppSearch = ({ onChange, value = '' }: AppSearchProps) => {
-  const [newQuery, setNewQuery] = useState<string>(value);
-  const [isMounted, setIsMounted] = useState(true);
-
-  const { term, country, media, entity, attribute } = useSearchQuery(newQuery);
-  const debouncedNewQuery = useDebounce(newQuery, 720);
+  const { term, country, media, entity, attribute } = useItunesQuery(value);
 
   const changeSearchParam = (
     name: FilterItemName,
@@ -33,7 +28,7 @@ export const AppSearch = ({ onChange, value = '' }: AppSearchProps) => {
       newParams[name] = newValue;
     }
     const str = qs.stringify(newParams, { arrayFormat: 'repeat' });
-    setNewQuery(str);
+    onChange(str);
   };
 
   const availableMediaTypes = useMemo<MediaType[]>(
@@ -68,14 +63,6 @@ export const AppSearch = ({ onChange, value = '' }: AppSearchProps) => {
     }
     return [];
   }, [media]);
-
-  useEffect(() => {
-    if (isMounted) onChange(debouncedNewQuery);
-  }, [debouncedNewQuery, onChange, isMounted]);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
 
   return (
     <Form

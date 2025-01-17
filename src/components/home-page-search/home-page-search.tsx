@@ -1,26 +1,29 @@
 'use client';
 
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { AppSearch } from '../search';
-import { useCallback, useTransition } from 'react';
+import { useEffect, useState, useTransition } from 'react';
+import useDebounce from '@/hooks/use-debounce';
 
-export const HomePageSearch = () => {
-  const params = useSearchParams();
+export const HomePageSearch = ({ queryString }: { queryString?: string }) => {
   const router = useRouter();
   const [isPendingRoute, startChangeRoute] = useTransition();
+  const [searchValue, setSearchValue] = useState(queryString);
+  const debouncedSearch = useDebounce(searchValue, 720);
 
-  const onChange = useCallback(
-    (query?: string) => {
-      startChangeRoute(() => {
-        if (query) {
-          router.push(`?${query}`);
-        } else {
-          router.push('/');
-        }
-      });
-    },
-    [router]
-  );
+  useEffect(() => {
+    setSearchValue(queryString);
+  }, [queryString]);
+
+  useEffect(() => {
+    startChangeRoute(() => {
+      if (debouncedSearch) {
+        router.push(`?${debouncedSearch}`);
+      } else {
+        router.push('/');
+      }
+    });
+  }, [debouncedSearch, router]);
 
   return (
     <div
@@ -28,7 +31,7 @@ export const HomePageSearch = () => {
         isPendingRoute ? 'pointer-events-none w-full animate-pulse' : 'w-full'
       }
     >
-      <AppSearch value={params.toString()} onChange={onChange} />
+      <AppSearch value={searchValue} onChange={setSearchValue} />
     </div>
   );
 };

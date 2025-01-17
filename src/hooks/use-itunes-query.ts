@@ -10,7 +10,7 @@ const forceQueryParamToArray = (value?: ParsedQs[string]): string[] => {
   return [];
 };
 
-export const useSearchQuery = (baseQuery: string) => {
+export const useItunesQuery = (baseQuery: string) => {
   const query = useMemo(() => qs.parse(baseQuery), [baseQuery]);
   const term = useMemo(() => query.term, [query]);
   const country = useMemo(() => forceQueryParamToArray(query.country), [query]);

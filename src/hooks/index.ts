@@ -1,2 +1,2 @@
 export * from './use-debounce';
-export * from './use-search-query';
+export * from './use-itunes-query';

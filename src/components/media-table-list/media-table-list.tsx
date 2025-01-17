@@ -18,7 +18,7 @@ import {
 } from '@nextui-org/react';
 import { ChevronDownIcon, Play } from 'lucide-react';
 import Image from 'next/image';
-import { keys, map, nth, pick, prop } from 'ramda';
+import { map, pick, prop } from 'ramda';
 import { use, useMemo, useState } from 'react';
 import { MediaPlayerModal } from '../medial-player-modal';
 import './style.css';
@@ -30,6 +30,7 @@ export const MediaTableList = ({
 }) => {
   const { results: data, resultCount: count } =
     use<ApiSearchResponse>(fetchData);
+
   const [visibleColumns, setVisibleColumns] = useState([
     'wrapperType',
     'trackName',
@@ -42,7 +43,7 @@ export const MediaTableList = ({
 
   const allColumns = useMemo(() => {
     if (data?.length) {
-      return map((key) => ({ key: key }), keys(nth(0, data) || {}));
+      return Object.keys(data[0]).map((key) => ({ key }));
     }
     return [];
   }, [data]);
@@ -77,7 +78,7 @@ export const MediaTableList = ({
                 size='sm'
                 variant='flat'
               >
-                Columns
+                Columns ({visibleColumns.length})
               </Button>
             </DropdownTrigger>
             <DropdownMenu
@@ -89,9 +90,9 @@ export const MediaTableList = ({
               closeOnSelect={false}
               selectedKeys={visibleColumns}
               selectionMode='multiple'
-              onSelectionChange={(value) =>
-                setVisibleColumns(Array.from(value) as string[])
-              }
+              onSelectionChange={(value) => {
+                setVisibleColumns(Array.from(value) as string[]);
+              }}
             >
               {allColumns.map((column) => (
                 <DropdownItem key={column.key} className='capitalize'>
@@ -121,6 +122,7 @@ export const MediaTableList = ({
                 let type: 'text' | 'image' | 'link' = 'text';
                 const textClassName =
                   'overflow-ellipsis whitespace-nowrap max-w-40 overflow-hidden inline-block';
+                // @todo check image by mime type
                 if (column.includes('artworkUrl')) {
                   type = 'image';
                 } else if (isValidUrl(text)) {

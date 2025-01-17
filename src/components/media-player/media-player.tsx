@@ -1,6 +1,7 @@
 'use client';
 
 import { Alert, Spinner } from '@nextui-org/react';
+import pm from 'picomatch';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 export type MediaPlayerProps = {
@@ -27,6 +28,9 @@ export const MediaPlayer = ({ mediaUrl }: MediaPlayerProps) => {
     try {
       setError(null);
       setMimeType(null);
+      if (!pm('*.itunes.apple.com')(new URL(mediaUrl).hostname)) {
+        throw new Error('Invalid media URL');
+      }
       const fileFetch = await fetch(mediaUrl);
       const contentType = fileFetch.headers.get('content-type');
       setMimeType(contentType);
@@ -36,7 +40,7 @@ export const MediaPlayer = ({ mediaUrl }: MediaPlayerProps) => {
         reason = error.message;
       }
       setError(
-        `Failed to fetch media file. Reason: ${reason}. Click for reload`
+        `Failed to fetch media file. Reason: ${reason}, URL: ${mediaUrl}`
       );
     }
   }, [mediaUrl]);
@@ -46,7 +50,14 @@ export const MediaPlayer = ({ mediaUrl }: MediaPlayerProps) => {
   }, [detectType]);
 
   if (error) {
-    return <Alert color='danger' title={error} onClick={detectType} />;
+    return (
+      <Alert
+        classNames={{ mainWrapper: 'overflow-auto' }}
+        color='danger'
+        title={error}
+        onClick={detectType}
+      />
+    );
   }
 
   if (!mimeType) {
