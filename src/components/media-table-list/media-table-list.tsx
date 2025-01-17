@@ -68,6 +68,7 @@ export const MediaTableList = ({
         base: 'MediaListTable h-full max-w-full overflow-auto mt-2',
         table: 'h-full',
       }}
+      aria-labelledby='media table'
       topContentPlacement='outside'
       topContent={
         <div className='flex flex-row items-center justify-end space-x-2 pt-2'>
@@ -155,6 +156,8 @@ export const MediaTableList = ({
                           src={text}
                           className='object-contain'
                           fill
+                          priority={false}
+                          sizes='100%'
                         />
                       </div>
                     </TableCell>

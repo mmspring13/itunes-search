@@ -9,7 +9,7 @@ export const HomePageSearch = ({ queryString }: { queryString?: string }) => {
   const router = useRouter();
   const [isPendingRoute, startChangeRoute] = useTransition();
   const [searchValue, setSearchValue] = useState(queryString);
-  const debouncedSearch = useDebounce(searchValue, 1100);
+  const debouncedSearch = useDebounce(searchValue, 860);
 
   useEffect(() => {
     setSearchValue(queryString);
