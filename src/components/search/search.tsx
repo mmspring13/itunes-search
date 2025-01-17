@@ -2,7 +2,7 @@
 
 import { countryIso2 } from '@/lib/countries';
 import { Form, Input, Select, SelectItem } from '@nextui-org/react';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { split, omit, uniq, flatten, values, pick } from 'ramda';
 import { constructAttributes, constructEntities, MediaType } from '@/api/types';
 import { FilterItemName } from './types';
@@ -15,7 +15,9 @@ export type AppSearchProps = {
 };
 
 export const AppSearch = ({ onChange, value = '' }: AppSearchProps) => {
-  const { term, country, media, entity, attribute } = useItunesQuery(value);
+  const [localValue, setLocalValue] = useState(value);
+  const { term, country, media, entity, attribute } =
+    useItunesQuery(localValue);
 
   const changeSearchParam = (
     name: FilterItemName,
@@ -28,8 +30,10 @@ export const AppSearch = ({ onChange, value = '' }: AppSearchProps) => {
       newParams[name] = newValue;
     }
     const str = qs.stringify(newParams, { arrayFormat: 'repeat' });
-    onChange(str);
+    setLocalValue(str);
   };
+
+  const sync = () => onChange(localValue);
 
   const availableMediaTypes = useMemo<MediaType[]>(
     () => [
@@ -64,6 +68,10 @@ export const AppSearch = ({ onChange, value = '' }: AppSearchProps) => {
     return [];
   }, [media]);
 
+  useEffect(() => {
+    if (!value) setLocalValue('');
+  }, [value]);
+
   return (
     <Form
       className='grid w-full grid-cols-1 items-center gap-2 md:grid-cols-2'
@@ -76,6 +84,7 @@ export const AppSearch = ({ onChange, value = '' }: AppSearchProps) => {
         className='text-slate-800 md:col-span-2'
         name='term'
         value={term ? String(term) : ''}
+        onBlur={sync}
         onChange={(e) => changeSearchParam('term', e.target.value)}
         label='Search string'
       />
@@ -86,6 +95,7 @@ export const AppSearch = ({ onChange, value = '' }: AppSearchProps) => {
           changeSearchParam('country', split(',', e.target.value))
         }
         name='country'
+        onClose={sync}
         selectionMode='multiple'
         selectedKeys={country}
         defaultSelectedKeys={country}
@@ -100,6 +110,7 @@ export const AppSearch = ({ onChange, value = '' }: AppSearchProps) => {
         size='sm'
         label='Media type'
         name='media'
+        onClose={sync}
         onChange={(e) => changeSearchParam('media', split(',', e.target.value))}
         selectionMode='multiple'
         defaultSelectedKeys={media}
@@ -115,6 +126,7 @@ export const AppSearch = ({ onChange, value = '' }: AppSearchProps) => {
         <Select
           size='sm'
           label='Entity'
+          onClose={sync}
           name='entity'
           onChange={(e) =>
             changeSearchParam('entity', split(',', e.target.value))
@@ -133,6 +145,7 @@ export const AppSearch = ({ onChange, value = '' }: AppSearchProps) => {
       {Boolean(availableAttributes.length) && (
         <Select
           size='sm'
+          onClose={sync}
           label='Attribute'
           name='attribute'
           onChange={(e) =>
