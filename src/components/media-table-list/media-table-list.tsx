@@ -1,6 +1,6 @@
 'use client';
 
-import { ApiSearchResponse, BaseMediaProps } from '@/api/types';
+import { ItunesResponse, ItunesResponseItem } from '@/api/types';
 import { intlFormat } from 'date-fns';
 import { isValidUrl } from '@/lib/is-valid-url';
 import {
@@ -32,10 +32,10 @@ export const MediaTableList = ({
   fetchData,
   url,
 }: {
-  fetchData: Promise<ApiSearchResponse>;
+  fetchData: Promise<ItunesResponse>;
   url?: string;
 }) => {
-  const fetchDataResponse = use<ApiSearchResponse>(fetchData);
+  const fetchDataResponse = use<ItunesResponse>(fetchData);
   const { results: data, resultCount: count } = fetchDataResponse;
 
   const [visibleColumns, setVisibleColumns] = useState([
@@ -59,7 +59,7 @@ export const MediaTableList = ({
     return visibleColumns.map((key) => ({ key }));
   }, [visibleColumns]);
 
-  const formattedData: Partial<BaseMediaProps>[] = useMemo(() => {
+  const formattedData: Partial<ItunesResponseItem>[] = useMemo(() => {
     if (data?.length) {
       return map(pick(visibleColumns), data);
     }

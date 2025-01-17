@@ -1,4 +1,4 @@
-import { ApiSearchResponse } from '@/api/types';
+import { ItunesResponse } from '@/api/types';
 import {
   Button,
   Modal,
@@ -10,7 +10,7 @@ import {
 import { useMemo, useState } from 'react';
 
 export type ResponseModalProps = {
-  data: ApiSearchResponse;
+  data: ItunesResponse;
   children: (v: boolean, set: (v: boolean) => void) => React.ReactNode;
 };
 

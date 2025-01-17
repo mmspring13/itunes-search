@@ -14,7 +14,7 @@ export type MediaTypeEntities = Record<MediaType, string[]>;
 
 export type MediaTypeAttributes = Record<MediaType, string[]>;
 
-export type BaseMediaProps = {
+export type ItunesResponseItem = {
   wrapperType: MediaType;
   artistId: number;
   collectionId: number;
@@ -28,10 +28,28 @@ export type BaseMediaProps = {
   [k: string]: unknown;
 };
 
-export type ApiSearchResponse = {
+export type ItunesResponse = {
   resultCount: number;
-  results: Array<BaseMediaProps>;
+  results: Array<ItunesResponseItem>;
 };
+
+export type ItunesQuery = {
+  term: string;
+  country: string;
+  media: MediaType;
+  entity: string[];
+  attribute: string[];
+};
+
+export type QueryValue = string | string[] | undefined;
+
+export const itunesQueryProps: (keyof ItunesQuery)[] = [
+  'term',
+  'country',
+  'media',
+  'entity',
+  'attribute',
+];
 
 export const constructAttributes: MediaTypeAttributes = {
   ebook: ['ebook'],

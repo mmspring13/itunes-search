@@ -4,8 +4,12 @@ import { countryIso2 } from '@/lib/countries';
 import { Form, Input, Select, SelectItem } from '@nextui-org/react';
 import { useEffect, useMemo, useState } from 'react';
 import { split, omit, uniq, flatten, values, pick } from 'ramda';
-import { constructAttributes, constructEntities, MediaType } from '@/api/types';
-import { FilterItemName } from './types';
+import {
+  constructAttributes,
+  constructEntities,
+  ItunesQuery,
+  MediaType,
+} from '@/api/types';
 import { useItunesQuery } from '@/hooks';
 import qs from 'qs';
 
@@ -20,7 +24,7 @@ export const AppSearch = ({ onChange, value = '' }: AppSearchProps) => {
     useItunesQuery(localValue);
 
   const changeSearchParam = (
-    name: FilterItemName,
+    name: keyof ItunesQuery,
     newValue: string | string[]
   ) => {
     let newParams = qs.parse(value);

@@ -3,7 +3,7 @@ import { MediaListAlert } from './client';
 import { Suspense } from 'react';
 import { Spinner } from '@nextui-org/react';
 import { MediaTableList } from '../media-table-list';
-import { ApiSearchResponse } from '@/api/types';
+import { ItunesResponse } from '@/api/types';
 
 export const MediaList = async ({ queryString }: { queryString?: string }) => {
   let fetchData = null;
@@ -29,7 +29,7 @@ export const MediaList = async ({ queryString }: { queryString?: string }) => {
         >
           <MediaTableList
             url={queryString}
-            fetchData={fetchData as Promise<ApiSearchResponse>}
+            fetchData={fetchData as Promise<ItunesResponse>}
           />
         </Suspense>
       )}
