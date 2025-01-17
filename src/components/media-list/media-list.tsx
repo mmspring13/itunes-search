@@ -1,30 +1,33 @@
 import { itunesProxy } from '@/api/itunes-proxy';
-import { MediaListAlert, MediaListTable } from './client';
+import { MediaListAlert } from './client';
 import { Suspense } from 'react';
 import { Spinner } from '@nextui-org/react';
+import { MediaTableList } from '../media-table-list';
+import { ApiSearchResponse } from '@/api/types';
 
 export const MediaList = async ({ queryString }: { queryString?: string }) => {
-  let data = null;
+  let fetchData = null;
   let error = null;
   if (queryString) {
-    data = itunesProxy(queryString);
-    if (data instanceof Error) {
-      error = data;
+    fetchData = itunesProxy(queryString);
+    if (fetchData instanceof Error) {
+      error = fetchData;
+      fetchData = null;
     }
   }
 
   return (
     <div className='mt-4 w-full'>
       {error && <MediaListAlert message={error.message} />}
-      {data && (
+      {!!fetchData && (
         <Suspense
           fallback={
-            <div className='mt-12 flex justify-center'>
+            <div className='flex justify-center py-6'>
               <Spinner />
             </div>
           }
         >
-          <MediaListTable fetchData={data} />
+          <MediaTableList fetchData={fetchData as Promise<ApiSearchResponse>} />
         </Suspense>
       )}
     </div>

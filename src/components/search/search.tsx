@@ -5,30 +5,32 @@ import { Form, Input, Select, SelectItem } from '@nextui-org/react';
 import { useEffect, useMemo, useState } from 'react';
 import { split, omit, uniq, flatten, values, pick } from 'ramda';
 import { constructAttributes, constructEntities, MediaType } from '@/api/types';
-import { useRouter, useSearchParams } from 'next/navigation';
 import { FilterItemName } from './types';
 import useDebounce from '@/hooks/use-debounce';
 import { useSearchQuery } from '@/hooks';
 import qs from 'qs';
 
-export const AppSearch = () => {
-  const router = useRouter();
-  const params = useSearchParams();
+export type AppSearchProps = {
+  onChange(v: string): void;
+  value?: string;
+};
 
-  const [newQuery, setNewQuery] = useState<string>(params.toString());
+export const AppSearch = ({ onChange, value = '' }: AppSearchProps) => {
+  const [newQuery, setNewQuery] = useState<string>(value);
+  const [isMounted, setIsMounted] = useState(true);
 
   const { term, country, media, entity, attribute } = useSearchQuery(newQuery);
-  const debouncedNewQuery = useDebounce(newQuery, 960);
+  const debouncedNewQuery = useDebounce(newQuery, 720);
 
   const changeSearchParam = (
     name: FilterItemName,
-    value: string | string[]
+    newValue: string | string[]
   ) => {
-    let newParams = qs.parse(params.toString());
-    if (!value || !value.length || !value[0].length) {
+    let newParams = qs.parse(value);
+    if (!newValue || !newValue.length || !newValue[0].length) {
       newParams = omit([name], newParams);
     } else {
-      newParams[name] = value;
+      newParams[name] = newValue;
     }
     const str = qs.stringify(newParams, { arrayFormat: 'repeat' });
     setNewQuery(str);
@@ -68,16 +70,12 @@ export const AppSearch = () => {
   }, [media]);
 
   useEffect(() => {
-    if (debouncedNewQuery) {
-      router.push(`?${debouncedNewQuery}`);
-    } else {
-      router.push('/');
-    }
-  }, [debouncedNewQuery, router]);
+    if (isMounted) onChange(debouncedNewQuery);
+  }, [debouncedNewQuery, onChange, isMounted]);
 
   useEffect(() => {
-    setNewQuery(params.toString());
-  }, [params]);
+    setIsMounted(true);
+  }, []);
 
   return (
     <Form

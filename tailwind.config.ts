@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 
 import { nextui } from '@nextui-org/react';
+import animate from 'tailwindcss-animate';
 import type { Config } from 'tailwindcss';
 // import baseConfig from 'tailwindcss/defaultConfig';
 
@@ -45,5 +46,5 @@ export default {
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
     './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}',
   ],
-  plugins: [nextui()],
+  plugins: [nextui(), animate],
 } satisfies Config;
