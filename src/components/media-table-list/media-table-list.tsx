@@ -36,7 +36,16 @@ export const MediaTableList = ({
   url?: string;
 }) => {
   const fetchDataResponse = use<ItunesResponse>(fetchData);
-  const { results: data, resultCount: count } = fetchDataResponse;
+
+  const { data, count } = useMemo(() => {
+    if (fetchDataResponse) {
+      return {
+        data: fetchDataResponse.results,
+        count: fetchDataResponse.resultCount,
+      };
+    }
+    return { data: [], count: 0 };
+  }, [fetchDataResponse]);
 
   const [visibleColumns, setVisibleColumns] = useState([
     'artworkUrl100',
@@ -176,7 +185,7 @@ export const MediaTableList = ({
                         <Image
                           alt='media-image'
                           src={text}
-                          className='object-contain'
+                          className='object-scale-down'
                           fill
                           priority={false}
                           sizes='100%'
