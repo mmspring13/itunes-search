@@ -11,7 +11,7 @@ export const itunesProxy = async (params?: string) => {
     return null;
   }
   const newParams = qs.parse(params);
-  if (!newParams || !validateQuery(newParams as Record<string, QueryValue>)) {
+  if (!validateQuery(newParams as Record<string, QueryValue>)) {
     return null;
   }
 

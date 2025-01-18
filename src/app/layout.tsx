@@ -24,7 +24,7 @@ export default async function RootLayout({
         <meta name='theme-color' content='#030712' />
       </head>
       <body
-        className={`${inter.className} h-full min-h-dvh w-screen bg-background text-foreground antialiased dark`}
+        className={`${inter.className} h-full min-h-dvh bg-background text-foreground antialiased dark`}
       >
         <AppUIProvider>
           <div className='h-full min-h-dvh pb-12'>

@@ -14,7 +14,7 @@ const HomePage = async ({
   const search = await searchParams;
 
   // validate search params
-  if (search && !validateQuery(search)) {
+  if (search && Object.keys(search).length && !validateQuery(search)) {
     redirect('/');
   }
 

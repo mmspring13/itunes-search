@@ -2,7 +2,11 @@ import qs from 'qs';
 import { ItunesQuery, itunesQueryProps, QueryValue } from './types';
 
 export const validateQuery = (query?: Record<string, QueryValue>) => {
-  if (!query || qs.stringify(query).length > 380) {
+  if (
+    !query ||
+    !Object.keys(query).length ||
+    qs.stringify(query).length > 380
+  ) {
     return false;
   }
   const newQuery: Record<string, QueryValue> = {};
@@ -14,4 +18,5 @@ export const validateQuery = (query?: Record<string, QueryValue>) => {
   if (Object.keys(newQuery).length !== Object.keys(query).length) {
     return false;
   }
+  return true;
 };
