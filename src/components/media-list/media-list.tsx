@@ -4,22 +4,19 @@ import { Suspense } from 'react';
 import { Spinner } from '@nextui-org/react';
 import { MediaTableList } from '../media-table-list';
 import { ItunesResponse } from '@/api/types';
+import { ErrorBoundary } from 'react-error-boundary';
 
 export const MediaList = async ({ queryString }: { queryString?: string }) => {
   let fetchData = null;
-  let error = null;
   if (queryString) {
     fetchData = itunesProxy(queryString);
-    if (fetchData instanceof Error) {
-      error = fetchData;
-      fetchData = null;
-    }
+  } else {
+    return null;
   }
 
   return (
     <div className='mt-4 w-full'>
-      {error && <MediaListAlert message={error.message} />}
-      {!!fetchData && (
+      <ErrorBoundary FallbackComponent={MediaListAlert}>
         <Suspense
           fallback={
             <div className='flex justify-center py-6'>
@@ -32,7 +29,7 @@ export const MediaList = async ({ queryString }: { queryString?: string }) => {
             fetchData={fetchData as Promise<ItunesResponse>}
           />
         </Suspense>
-      )}
+      </ErrorBoundary>
     </div>
   );
 };

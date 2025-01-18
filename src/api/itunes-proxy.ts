@@ -8,14 +8,14 @@ const getTag = (params = '') => ['ITUNES_PROXY', params].join('-');
 
 export const itunesProxy = async (params?: string) => {
   if (!params) {
-    return null;
+    throw new Error('Params must be provided');
   }
   const newParams = qs.parse(params);
   if (
     !newParams.term ||
     !validateQuery(newParams as Record<string, QueryValue>)
   ) {
-    return null;
+    throw new Error(`Invalid params ${params}`);
   }
 
   const fetchUrl = new URL('search', process.env.ITUNES_API_URL);
@@ -34,10 +34,11 @@ export const itunesProxy = async (params?: string) => {
     const data = await search.json();
     return data;
   } catch (error) {
+    console.log('ERRROR', error);
     let message = `Fetching data failed. Please try again later. URL: ${fetchUrl}`;
     if (error instanceof Error) {
       message += ` More details: ${error.message}`;
     }
-    return new Error(message);
+    throw new Error(message);
   }
 };

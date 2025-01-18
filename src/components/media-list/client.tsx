@@ -2,12 +2,12 @@
 
 import { Alert } from '@nextui-org/react';
 
-export const MediaListAlert = ({ message }: { message: string }) => {
+export const MediaListAlert = () => {
   return (
     <Alert
       classNames={{ mainWrapper: 'overflow-auto' }}
       color='danger'
-      title={message}
+      title='Fetch failed. Please try again later or change your request'
     />
   );
 };

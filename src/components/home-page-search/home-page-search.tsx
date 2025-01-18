@@ -10,10 +10,17 @@ export const HomePageSearch = ({ queryString }: { queryString?: string }) => {
   const [isPendingRoute, startChangeRoute] = useTransition();
   const [searchValue, setSearchValue] = useState(queryString);
   const debouncedSearch = useDebounce(searchValue, 160);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    setSearchValue(queryString);
-  }, [queryString]);
+    setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (isMounted) {
+      setSearchValue(queryString);
+    }
+  }, [queryString, isMounted]);
 
   useEffect(() => {
     startChangeRoute(() => {

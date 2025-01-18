@@ -21,7 +21,8 @@
     "qs": "^6.13.1",
     "ramda": "^0.30.1",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-error-boundary": "^5.0.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

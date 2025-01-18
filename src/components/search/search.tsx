@@ -33,6 +33,9 @@ export const AppSearch = ({ onChange, value = '' }: AppSearchProps) => {
     } else {
       newParams[name] = newValue;
     }
+    if (name === 'media' && !newValue?.[0]?.length) {
+      newParams = omit(['attribute', 'entity'], newParams);
+    }
     const str = qs.stringify(newParams, { arrayFormat: 'repeat' });
     setLocalValue(str);
   };
