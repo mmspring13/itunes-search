@@ -75,8 +75,6 @@ export const MediaTableList = ({
     return [];
   }, [visibleColumns, data]);
 
-  if (!data?.length) return null;
-
   return (
     <Table
       classNames={{
@@ -95,7 +93,7 @@ export const MediaTableList = ({
                 size='sm'
                 variant='flat'
               >
-                Columns ({visibleColumns.length})
+                Columns {Boolean(count) && `(${visibleColumns.length})`}
               </Button>
             </DropdownTrigger>
             <DropdownMenu
