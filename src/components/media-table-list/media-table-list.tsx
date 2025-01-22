@@ -35,7 +35,7 @@ export const MediaTableList = ({
   fetchData: Promise<ItunesResponse>;
   url?: string;
 }) => {
-  const fetchDataResponse = use<ItunesResponse>(fetchData);
+  const fetchDataResponse = use(fetchData);
 
   const { data, count } = useMemo(() => {
     if (fetchDataResponse) {

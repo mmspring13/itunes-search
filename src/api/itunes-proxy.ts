@@ -2,11 +2,15 @@
 
 import qs from 'qs';
 import { validateQuery } from './utils';
-import { QueryValue } from './types';
+import { ItunesResponse, QueryValue } from './types';
 
 const getTag = (params = '') => ['ITUNES_PROXY', params].join('-');
 
-export const itunesProxy = async (params?: string) => {
+export const itunesProxy = async (
+  params?: string,
+  count = 0
+): Promise<ItunesResponse> => {
+  let newCount = count;
   if (!params) {
     throw new Error('Params must be provided');
   }
@@ -23,6 +27,7 @@ export const itunesProxy = async (params?: string) => {
   if (params) {
     fetchUrl.search = qs.stringify(newParams);
   }
+  newCount += 1;
   try {
     const search = await fetch(fetchUrl, {
       cache: 'force-cache',
@@ -34,7 +39,9 @@ export const itunesProxy = async (params?: string) => {
     const data = await search.json();
     return data;
   } catch (error) {
-    console.log('ERRROR', error);
+    if (newCount <= 3) {
+      return itunesProxy(params, newCount);
+    }
     let message = `Fetching data failed. Please try again later. URL: ${fetchUrl}`;
     if (error instanceof Error) {
       message += ` More details: ${error.message}`;
