@@ -10,13 +10,10 @@ export const validateQuery = (query?: Record<string, QueryValue>) => {
     return false;
   }
   const newQuery: Record<string, QueryValue> = {};
-  for (const [key, value] of Object.entries(query)) {
-    if (itunesQueryProps.includes(key as keyof ItunesQuery)) {
-      newQuery[key] = value;
+  for (const key in query) {
+    if (!itunesQueryProps.includes(key as keyof ItunesQuery)) {
+      return false
     }
-  }
-  if (Object.keys(newQuery).length !== Object.keys(query).length) {
-    return false;
   }
   return true;
 };
